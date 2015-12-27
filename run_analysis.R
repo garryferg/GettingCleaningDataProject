@@ -1,7 +1,7 @@
 library(dplyr)
 
 # Unzip data
-# unzip('getdata_projectfiles_UCI HAR Dataset.zip', exdir='unzipped')
+unzip('getdata_projectfiles_UCI HAR Dataset.zip', exdir='unzipped')
 
 # Read train data
 subject_train <- read.table('unzipped/UCI HAR Dataset/train/subject_train.txt', header=FALSE)
@@ -41,17 +41,11 @@ columnsToKeep <- union(c(1,2), columnsToKeep) #keep subject and activity
 # Now filter 'all' down to just the columns we are interested in
 all <- all[,columnsToKeep]
 
-# Clean up the names slightly by stripping multiple "." characters and removing them from the end of names
+# Clean up the names using a series of string replacements
 names(all) <- sub("...", ".", names(all), fixed = TRUE)
 names(all) <- sub("\\.$", "", names(all))
 names(all) <- sub("\\.$", "", names(all))
-
-# tBodyAcc"             "tGravityAcc"         
-#[6] "tBodyAccJerk"         "tBodyGyro"            "tBodyGyroJerk"        "tBodyAccMag"          "tGravityAccMag"      
-#[11] "tBodyAccJerkMag"      "tBodyGyroMag"         "tBodyGyroJerkMag"     "fBodyAcc"             "fBodyAccJerk"        
-#[16] "fBodyGyro"            "fBodyAccMag"          "fBodyBodyAccJerkMag"  "fBodyBodyGyroMag"     "fBodyBodyGyroJerkMag"
-
-names(all) <- sub("BodyBody", "Body", names(all), fixed = TRUE) #assume BodyBody is a mistake in features.txt
+names(all) <- sub("BodyBody", "Body", names(all), fixed = TRUE) #assuming BodyBody is a mistake in features.txt
 names(all) <- sub("tBody", "Body.", names(all), fixed = TRUE)
 names(all) <- sub("fBody", "FFT.Body.", names(all), fixed = TRUE)
 names(all) <- sub("tGravity", "Gravity.", names(all), fixed = TRUE)
@@ -64,11 +58,6 @@ names(all) <- sub(".std", ".StdDev", names(all), fixed = TRUE)
 names(all) <- sub("..", ".", names(all), fixed = TRUE)
 names(all) <- sub("Magnitude.Mean", "Mean.Magnitude", names(all), fixed = TRUE)
 names(all) <- sub("Magnitude.StdDev", "StdDev.Magnitude", names(all), fixed = TRUE)
-
-
-
-
-
 
 # Our activity variable currently contains integers. We want to replace them with activity names.
 # Read from activity_labels.txt - there are two columns, and integer key and an activity label
